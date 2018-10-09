@@ -7,6 +7,9 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native'
+import { Link } from 'react-router-native'
+import { connect } from 'react-redux'
+import { handleLogin, registerUser } from '../reducers/user'
 
 class Auth extends React.Component {
   state = {
@@ -42,6 +45,13 @@ class Auth extends React.Component {
 
 
   handleSubmit = () => {
+    const { dispatch, type, history } = this.props
+    const { email, password, passwordConfirmation }
+    = this.state
+    if (type === 'Register')
+      dispatch(registerUser(this.state, history))
+    else
+      dispatch(handleLogin(this.state, history))
     this.setState({ 
       email: '', 
       password: '', 
@@ -99,13 +109,23 @@ class Auth extends React.Component {
             {type}
           </Text>
         </TouchableOpacity>
+        <Link to={ type === 'Register' ? '/login' : '/register' }>
+          <Text style={styles.link}>
+          {type === 'Register' ? 'Login' : 'Register' }
+          </Text>
+        </Link>
       </KeyboardAvoidingView>
     )
   }
-
 }
 
 const styles = StyleSheet.create({
+  link: {
+    color: 'lightblue',
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 20,
+  },
   container: {
     backgroundColor: '#000',
     flex: 1,
@@ -141,4 +161,4 @@ const styles = StyleSheet.create({
   error: { color: 'red' }
 })
 
-export default Auth
+export default connect() (Auth)
