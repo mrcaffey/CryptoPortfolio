@@ -1,11 +1,19 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { getCoins } from '../reducers/coins'
+import Coin from './Coin'
 
 class Coins extends React.Component {
   componentDidMount() {
-    this.props.dispatch(getCoins())
+    const { dispatch } = this.props
+    dispatch(getCoins())
+
+    this.interval = setInterval( () => dispatch(getCoins()), 60000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   render() {
@@ -15,6 +23,9 @@ class Coins extends React.Component {
         <Text style={styles.header}>
           My Portfolio
         </Text>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          { coins.map( coin => <Coin key={coin.id} {...coin} /> ) }
+        </ScrollView>
       </View>
     )
   }
@@ -25,6 +36,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  list: {
+    marginBottom: 20,
+  },
+
+  contentContainer: {
+    flexDirection: 'column',
+    flexGrow: 1,
   },
   header: {
     color: '#FFF',
