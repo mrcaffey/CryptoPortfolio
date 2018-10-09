@@ -9,7 +9,10 @@ import {
 } from 'react-native'
 import { Link } from 'react-router-native'
 import { connect } from 'react-redux'
-import { handleLogin, registerUser } from '../reducers/user'
+import { 
+  handleLogin, 
+  registerUser,
+} from '../reducers/user'
 
 class Auth extends React.Component {
   state = {
@@ -46,12 +49,11 @@ class Auth extends React.Component {
 
   handleSubmit = () => {
     const { dispatch, type, history } = this.props
-    const { email, password, passwordConfirmation }
-    = this.state
     if (type === 'Register')
       dispatch(registerUser(this.state, history))
-    else
+    else 
       dispatch(handleLogin(this.state, history))
+
     this.setState({ 
       email: '', 
       password: '', 
@@ -111,12 +113,13 @@ class Auth extends React.Component {
         </TouchableOpacity>
         <Link to={ type === 'Register' ? '/login' : '/register' }>
           <Text style={styles.link}>
-          {type === 'Register' ? 'Login' : 'Register' }
+            { type === 'Register' ? 'Login' : 'Register' }
           </Text>
         </Link>
       </KeyboardAvoidingView>
     )
   }
+
 }
 
 const styles = StyleSheet.create({
@@ -161,4 +164,4 @@ const styles = StyleSheet.create({
   error: { color: 'red' }
 })
 
-export default connect() (Auth)
+export default connect()(Auth)
